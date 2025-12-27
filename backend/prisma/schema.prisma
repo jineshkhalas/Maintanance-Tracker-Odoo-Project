@@ -1,56 +1,70 @@
 datasource db {
-    provider = "postgresql"
-    url = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 model Team {
-    id          String          @id @default (cuid())
-    name        String          @unique 
-    members     User[]
-    equipment   Equipment[]
+  id        String      @id @default(cuid())
+  name      String      @unique
+  company   String      @default("Main Factory")
+  members   String[]
+  users     User[]      // Team Members
+  equipment Equipment[]
+  createdAt DateTime    @default(now())
 }
 
 model User {
-    id          String          @id @default(cuid())
-    name        String 
-    email       String          @unique
-    role        String         
-    teamId      String?
-    team        Team?           @relation (fields: [teamId] , references: [id])
-    requests    Request[]
+  id               String      @id @default(cuid())
+  name             String
+  email            String      @unique
+  teamId           String?
+  team             Team?       @relation(fields: [teamId], references: [id])
+  
+  // Relations to differentiate between assigned work and machine ownership
+  requests         Request[]   
+  managedEquipment Equipment[] @relation("LeadTechnician") 
 }
 
 model Equipment {
-    id                  String          @id @default(cuid())
-    name                String
-    serialNumber        String          @unique
-    department          String      
-    location            String
-    purchaseDate        DateTime           
-    warrantyExipry      DateTime
-    isScrapped          Boolean         @default (false)
-    maintenanceTeamId   String
-    maintenanceTeam     Team            @relation(fields: [maintenanceTeamId], references: [id])
-    requests    Request[]
+  id                String    @id @default(cuid())
+  name              String
+  serialNumber      String    @unique
+  department        String
+  category          String
+  company           String
+  employee          String    // The operator/user of the machine
+
+  // Relations
+  maintenanceTeamId String?   // Changed to optional for better flexibility
+  maintenanceTeam   Team?     @relation(fields: [maintenanceTeamId], references: [id])
+  
+  technicianId      String?
+  assignedTechnician User?    @relation("LeadTechnician", fields: [technicianId], references: [id])
+
+  isScrapped        Boolean   @default(false)
+  purchaseDate      DateTime?
+  warrantyExpiry    DateTime?
+
+  requests          Request[]
+  createdAt         DateTime  @default(now())
 }
 
-
 model Request {
-  id             String    @id @default(cuid())
-  subject        String
-  type           String    
-  status         String    @default("New")
-  scheduledDate  DateTime
-  duration       Float?    
-  createdAt      DateTime  @default(now())
+  id            String   @id @default(cuid())
+  subject       String
+  type          String   
+  status        String   @default("New")
+  scheduledDate DateTime
+  duration      Float?   
+  createdAt     DateTime @default(now())
   
-  equipmentId    String
-  equipment      Equipment @relation(fields: [equipmentId], references: [id])
+  equipmentId   String
+  equipment     Equipment @relation(fields: [equipmentId], references: [id])
   
-  technicianId   String?
-  technician     User?     @relation(fields: [technicianId], references: [id])
+  technicianId  String?
+  technician    User?     @relation(fields: [technicianId], references: [id])
 }

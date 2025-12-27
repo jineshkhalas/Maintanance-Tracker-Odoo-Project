@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 
+const prisma = new PrismaClient();
 exports.createEquipment = async (req, res) => {
   try {
     const { 
@@ -16,13 +16,14 @@ exports.createEquipment = async (req, res) => {
         category,
         company,
         employee,
-        technicianId,
-        maintenanceTeamId,
+        technicianId: technicianId || null,
+        maintenanceTeamId: maintenanceTeamId && maintenanceTeamId.trim() !== "" ? maintenanceTeamId : null,
         isScrapped: false
       }
     });
     res.status(201).json(equipment);
   } catch (error) {
+    console.error("Prisma Error:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
