@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #0f172a;
+    /* Corresponds to text-slate-900 */
+    background-color: #f8fafc;
+    /* Corresponds to bg-slate-50 */
+    margin: 0;
+    font-family: "Lexend", sans-serif;
+}
+
+/* Custom Slow Spin Animation */
+.animate-spin-slow {
+    animation: spin 6s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
