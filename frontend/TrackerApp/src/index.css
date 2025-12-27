@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+* {
+    font-family: "Lexend" , sans-serif;
+}
+
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -8,7 +12,6 @@ body {
     background-color: #f8fafc;
     /* Corresponds to bg-slate-50 */
     margin: 0;
-    font-family: "Lexend", sans-serif;
 }
 
 /* Custom Slow Spin Animation */

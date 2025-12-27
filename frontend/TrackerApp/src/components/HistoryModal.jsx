@@ -13,7 +13,7 @@ const HistoryModal = ({ equipmentId, equipmentName, onclose }) => {
             <div className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl">
                 <div className="p-8 border-b flex justify-between items-center bg-slate-50">
                     <h2 className="text-2xl font-black text-slate-800">History: {equipmentName}</h2>
-                    <button onClick={onclose} className="text-slate-400 hover:text-slate-900 text-3xl font-light">&times;</button>
+                    <button onClick={onclose} className="cursor-pointer text-slate-400 hover:text-slate-900 text-3xl font-light">&times;</button>
                 </div>
                 <div className="max-h-[60vh] overflow-y-auto p-8">
                     <div className="space-y-6">
