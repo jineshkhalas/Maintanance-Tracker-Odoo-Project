@@ -3,13 +3,29 @@ const prisma = new PrismaClient();
 
 exports.createEquipment = async (req, res) => {
   try {
-    const equipment = await prisma.equipment.create({ data: req.body });
+    const { 
+      name, serialNumber, department, category, 
+      company, employee, technicianId, maintenanceTeamId 
+    } = req.body;
+
+    const equipment = await prisma.equipment.create({
+      data: {
+        name,
+        serialNumber,
+        department,
+        category,
+        company,
+        employee,
+        technicianId,
+        maintenanceTeamId,
+        isScrapped: false
+      }
+    });
     res.status(201).json(equipment);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
-
 exports.getAllEquipment = async (req, res) => {
   const { department, search } = req.query;
   try {

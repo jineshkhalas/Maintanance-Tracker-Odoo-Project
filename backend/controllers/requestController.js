@@ -17,7 +17,7 @@ exports.createRequest = async (req, res) => {
         type,
         scheduledDate: new Date(scheduledDate),
         equipmentId,
-        status: "New" 
+        status: "New"
       },
       include: { equipment: true }
     });
@@ -34,10 +34,10 @@ exports.updateRequest = async (req, res) => {
   try {
     const updatedRequest = await prisma.request.update({
       where: { id },
-      data: { 
-        status, 
+      data: {
+        status,
         duration: duration ? parseFloat(duration) : undefined,
-        technicianId 
+        technicianId
       }
     });
 
@@ -45,6 +45,13 @@ exports.updateRequest = async (req, res) => {
       await prisma.equipment.update({
         where: { id: updatedRequest.equipmentId },
         data: { isScrapped: true }
+      });
+    }
+
+    if (status === "In Progress" || status === "Repaired" || status === "New") {
+      await prisma.equipment.update({
+        where: { id: updatedRequest.equipmentId },
+        data: { isScrapped: false }
       });
     }
 
