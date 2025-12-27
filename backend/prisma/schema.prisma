@@ -1,0 +1,56 @@
+datasource db {
+    provider = "postgresql"
+    url = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-clinet-js"
+}
+
+model Team {
+    id          String          @id @default (cuid())
+    name        String          @unique 
+    members     User[]
+    equipment   Equipment[]
+}
+
+model User {
+    id          String          @id @default(cuid())
+    name        String 
+    email       String          @unique
+    role        String         
+    teamId      String?
+    team        Team?           @relation (fields: [teamId] , references: [id])
+    requests    Request[]
+}
+
+model Equipment {
+    id                  String          @id @default(cuid())
+    name                String
+    serialNumber        String          @unique
+    department          String      
+    location            String
+    purchaseDate        DateTime           
+    warrantyExipry      DateTime
+    isScrapped          Boolean         @default (false)
+    maintanenceTeamId   String
+    maintanenceTeam     Team            @relation(fields: [maintenanceTeamId], references: [id])
+    requests    Request[]
+}
+
+
+model Request {
+  id             String    @id @default(cuid())
+  subject        String
+  type           String    
+  status         String    @default("New")
+  scheduledDate  DateTime
+  duration       Float?    
+  createdAt      DateTime  @default(now())
+  
+  equipmentId    String
+  equipment      Equipment @relation(fields: [equipmentId], references: [id])
+  
+  technicianId   String?
+  technician     User?     @relation(fields: [technicianId], references: [id])
+}
